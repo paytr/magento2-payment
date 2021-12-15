@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <paytr_iframe>
+                <active>1</active>
+                <model>Paytr\Payment\Model\PaytrPaymentMethodIframe</model>
+                <title>Kredi / Banka Kartı</title>
+                <order_status>payment_review</order_status>
+                <merchant_id></merchant_id>
+                <merchant_key></merchant_key>
+                <merchant_salt></merchant_salt>
+                <debug_on>1</debug_on>
+                <test_mode>1</test_mode>
+                <paytr_logo>1</paytr_logo>
+                <categoryinstallment>0</categoryinstallment>
+                <installment_table_tab>0</installment_table_tab>
+                <installment_table_show_all>0</installment_table_show_all>
+                <installment_table_token>token</installment_table_token>
+                <can_void>1</can_void>
+                <is_gateway>1</is_gateway>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+            </paytr_iframe>
+        </payment>
+    </default>
+</config>

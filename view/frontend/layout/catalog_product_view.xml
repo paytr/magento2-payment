@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-right" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product.info.details">
+            <block ifconfig="payment/paytr_iframe/installment_table_tab" cacheable="false" class="Paytr\Payment\Block\Installment" name="paytr_installment_tab" template="Paytr_Payment::installment.phtml" group="detailed_info">
+                <arguments>
+                    <argument name="sort_order" xsi:type="string">4</argument>
+                    <argument translate="true" name="title" xsi:type="string">Installment Table</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

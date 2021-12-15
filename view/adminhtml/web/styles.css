@@ -1,0 +1,7 @@
+.paytr-section .heading {
+    background: url(https://www.paytr.com/img/general/paytr.svg) no-repeat 0% 50% / 14rem auto;
+    padding-left: 20rem;
+}
+.paytr-section .button-container {float: right;}
+.paytr-section .link-more {margin-left: 5px;}
+#payment_other_paytr_iframe .value{ width: 100%!important; }

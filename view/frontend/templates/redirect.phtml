@@ -1,0 +1,9 @@
+<iframe src="https://www.paytr.com/odeme/guvenli/<?php echo json_decode($this->getAction())->token;?>" id="paytriframe" frameborder="0" scrolling="no" style="width: 100%;"></iframe>
+<script type="text/javascript">
+    require([
+        "Paytr_Payment/js/iframeResizer.min",
+        "domReady"
+    ], function (iFrameResize) {
+        iFrameResize({},'#paytriframe');
+    });
+</script>
