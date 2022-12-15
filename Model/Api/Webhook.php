@@ -107,7 +107,7 @@ class Webhook
      */
     public function validateHash($response, $hash): bool
     {
-        return base64_encode(hash_hmac('sha256', $response['merchant_oid'].$this->paytrHelper->getMerchantSalt().$response['status'].$response['total_amount'], $this->paytrHelper->getMerchantKey(), true)) === $hash;
+        return base64_encode(hash_hmac('sha256', $response['merchant_oid'] . $this->paytrHelper->getMerchantSalt() . $response['status'] . $response['total_amount'], $this->paytrHelper->getMerchantKey(), true)) === $hash;
     }
 
     /**
@@ -141,10 +141,18 @@ class Webhook
      */
     public function addTransactionToOrder($order, $response): string
     {
-        if($order->getState())
-        {
+        if ($order->getState()) {
             $payment = $order->getPayment();
             $payment->setTransactionId($response['merchant_oid']);
+            if (in_array($order->getState(), [
+                Order::STATE_HOLDED,
+                Order::STATE_PROCESSING,
+                Order::STATE_CANCELED,
+                Order::STATE_CLOSED,
+                Order::STATE_COMPLETE,
+            ])) {
+                return 'OK';
+            }
             $trn = $payment->addTransaction(Transaction::TYPE_ORDER, null, true);
             $trn->setIsClosed(1)->save();
             $payment->addTransactionCommentsToOrder(
@@ -169,15 +177,15 @@ class Webhook
     {
         $currency               = $this->orderFactory->create()->load($order->getRealOrderId());
         $currency               = $currency->getOrderCurrency()->getId();
-        $maturity_difference    = 'Vade Farkı: '.(round(($response['total_amount'] - $response['payment_amount']) / 100)).' '.$currency.'<br>';
+        $maturity_difference    = 'Vade Farkı: ' . (round(($response['total_amount'] - $response['payment_amount']) / 100)) . ' ' . $currency . '<br>';
         $total_amount           = number_format(($response['total_amount'] / 100), 2, '.', '.');
         $amount                 = number_format(($response['payment_amount'] / 100), 2, '.', '.');
-        $note = '<b>'.__('PAYTR NOTICE - Payment Accepted').'</b><br>';
-        $note .= __('Total Paid').': '.$total_amount.' '.$currency.'<br>';
-        $note .= __('Paid').': '.$amount.' '.$currency.'<br>';
+        $note = '<b>' . __('PAYTR NOTICE - Payment Accepted') . '</b><br>';
+        $note .= __('Total Paid') . ': ' . $total_amount . ' ' . $currency . '<br>';
+        $note .= __('Paid') . ': ' . $amount . ' ' . $currency . '<br>';
         $note .= ($response['installment_count'] === '1' ? '' : $maturity_difference);
-        $note .= __('Installment Count').': '.($response['installment_count'] === '1' ? 'Tek Çekim' : $response['installment_count']).'<br>';
-        $note .= __('PayTR Order Number').': <a href="https://www.paytr.com/magaza/islemler?merchant_oid='.$response['merchant_oid'].'" target="_blank">'.$response['merchant_oid'].'</a><br>';
+        $note .= __('Installment Count') . ': ' . ($response['installment_count'] === '1' ? 'Tek Çekim' : $response['installment_count']) . '<br>';
+        $note .= __('PayTR Order Number') . ': <a href="https://www.paytr.com/magaza/islemler?merchant_oid=' . $response['merchant_oid'] . '" target="_blank">' . $response['merchant_oid'] . '</a><br>';
         return $note;
     }
 }

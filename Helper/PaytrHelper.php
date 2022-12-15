@@ -65,7 +65,7 @@ class PaytrHelper
      */
     public function getMerchantId()
     {
-        return $this->config->getValue('payment/paytr_iframe/merchant_id', $this->getScopeInterface()) ?? '151591';
+        return $this->config->getValue('payment/paytr_iframe/merchant_id', $this->getScopeInterface());
     }
 
     /**
@@ -73,7 +73,15 @@ class PaytrHelper
      */
     public function getMerchantSalt()
     {
-        return $this->config->getValue('payment/paytr_iframe/merchant_salt', $this->getScopeInterface()) ?? 'EbZ8rC8CEF7HU8hM';
+        return $this->config->getValue('payment/paytr_iframe/merchant_salt', $this->getScopeInterface());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeoutLimit()
+    {
+        return $this->config->getValue('payment/paytr_iframe/timeout_limit', $this->getScopeInterface());
     }
 
     public function getOrderStatus()
@@ -205,7 +213,7 @@ class PaytrHelper
      */
     public function getMerchantOid(): string
     {
-        return 'SP'.$this->getRealOrderId().'MG'.strtotime($this->getOrder()->getUpdatedAt());
+        return 'SP' . $this->getRealOrderId() . 'MG' . strtotime($this->getOrder()->getUpdatedAt());
     }
 
     /**
@@ -263,7 +271,7 @@ class PaytrHelper
      */
     public function getMerchantOkUrl(): string
     {
-        return $this->_storeManager->getStore()->getBaseUrl()."paytr/success";
+        return $this->_storeManager->getStore()->getBaseUrl() . "paytr/success";
     }
 
     /**
@@ -273,14 +281,6 @@ class PaytrHelper
     public function getMerchantFailUrl(): string
     {
         return $this->getMerchantOkUrl();
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimeoutLimit(): int
-    {
-        return 30;
     }
 
     /**
@@ -319,7 +319,7 @@ class PaytrHelper
      */
     public function getToken(): string
     {
-        return base64_encode(hash_hmac('sha256', $this->makeHashStr().$this->getMerchantSalt(), $this->getMerchantKey(), true));
+        return base64_encode(hash_hmac('sha256', $this->makeHashStr() . $this->getMerchantSalt(), $this->getMerchantKey(), true));
     }
 
     /**
@@ -400,7 +400,7 @@ class PaytrHelper
      */
     public function makePostVariables(): array
     {
-        return array(
+        return [
             'merchant_id'       =>  $this->getMerchantId(),
             'user_ip'           =>  $this->getUserIp(),
             'merchant_oid'      =>  $this->getMerchantOid(),
@@ -420,6 +420,6 @@ class PaytrHelper
             'currency'          =>  $this->getCurrency(),
             'test_mode'         =>  $this->getTestMode(),
             'lang'              =>  $this->getLang()
-        );
+        ];
     }
 }

@@ -5,7 +5,6 @@ namespace Paytr\Payment\Block;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\View\Element\Template\Context;
-use Magento\Sales\Model\Order;
 use Paytr\Payment\Helper\PaytrHelper;
 use Paytr\Payment\Helper\PaytrRequestHelper;
 
@@ -65,7 +64,7 @@ class Redirect extends \Magento\Framework\View\Element\Template
     {
         try {
             if (!$this->paytrHelper->getOrder()->getRealOrderId()) {
-                header('Location: '. $this->_storeManager->getStore()->getBaseUrl());
+                header('Location: ' . $this->_storeManager->getStore()->getBaseUrl());
                 return false;
             }
             $paytr_data = [

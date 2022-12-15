@@ -7,9 +7,10 @@
                 <model>Paytr\Payment\Model\PaytrPaymentMethodIframe</model>
                 <title>Kredi / Banka Kartı</title>
                 <order_status>payment_review</order_status>
-                <merchant_id></merchant_id>
-                <merchant_key></merchant_key>
-                <merchant_salt></merchant_salt>
+                <merchant_id> </merchant_id>
+                <merchant_key> </merchant_key>
+                <merchant_salt> </merchant_salt>
+                <timeout_limit>30</timeout_limit>
                 <debug_on>1</debug_on>
                 <test_mode>1</test_mode>
                 <paytr_logo>1</paytr_logo>
@@ -17,8 +18,8 @@
                 <installment_table_tab>0</installment_table_tab>
                 <installment_table_show_all>0</installment_table_show_all>
                 <installment_table_token>token</installment_table_token>
-                <can_void>1</can_void>
-                <is_gateway>1</is_gateway>
+                <is_offline>0</is_offline>
+                <is_gateway>0</is_gateway>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_refund>1</can_refund>
             </paytr_iframe>

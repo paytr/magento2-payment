@@ -34,6 +34,10 @@
                     <label>Merchant Salt</label>
                     <frontend_class>required-entry alphanumeric</frontend_class>
                 </field>
+                <field id="timeout_limit" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Timeout Limit</label>
+                    <frontend_class>required-entry validate-number</frontend_class>
+                </field>
                 <field id="debug_on" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Debug</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
