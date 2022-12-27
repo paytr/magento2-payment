@@ -31,7 +31,7 @@ class PaytrRequestHelper
      * @return string
      * @throws NoSuchEntityException
      */
-    public function getPaytrToken(): string
+    public function getPaytrToken()
     {
         return $this->callCurl($this->paytrHelper->makePostVariables());
     }
@@ -40,7 +40,7 @@ class PaytrRequestHelper
      * @param  $variables
      * @return mixed|string
      */
-    private function callCurl($variables): string
+    private function callCurl($variables)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://www.paytr.com/odeme/api/get-token");

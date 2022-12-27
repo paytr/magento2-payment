@@ -35,7 +35,7 @@ class InstallmentTypes extends Select
     /**
      * @return string
      */
-    protected function _toHtml(): string
+    protected function _toHtml()
     {
         if (!$this->getOptions()) {
             $this->setOptions($this->installmentTypeHelper->getInstallmentTypes());

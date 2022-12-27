@@ -15,7 +15,7 @@ class Html implements RendererInterface
     /**
      * @return string
      */
-    public function getMimeType(): string
+    public function getMimeType()
     {
         return 'text/html';
     }
@@ -25,7 +25,7 @@ class Html implements RendererInterface
      * @return string
      * @throws Exception
      */
-    public function render($data): string
+    public function render($data)
     {
         if (is_string($data)) {
             return $data;

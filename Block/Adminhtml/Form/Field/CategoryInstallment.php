@@ -22,7 +22,7 @@ class CategoryInstallment extends AbstractFieldArray
      * @return BlockInterface
      * @throws LocalizedException
      */
-    protected function getCategoryRenderer(): BlockInterface
+    protected function getCategoryRenderer()
     {
         if (!$this->categoryRenderer) {
             $this->categoryRenderer = $this->getLayout()->createBlock(
@@ -38,7 +38,7 @@ class CategoryInstallment extends AbstractFieldArray
      * @return BlockInterface
      * @throws LocalizedException
      */
-    protected function getInstallmentTypesRenderer(): BlockInterface
+    protected function getInstallmentTypesRenderer()
     {
         if (!$this->installmentTypesRenderer) {
             $this->installmentTypesRenderer = $this->getLayout()->createBlock(

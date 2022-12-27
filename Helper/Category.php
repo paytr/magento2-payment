@@ -41,7 +41,7 @@ class Category
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getCategories(): array
+    public function getCategories()
     {
         $cat                = [];
         $objectManager      = $objectManager = ObjectManager::getInstance();

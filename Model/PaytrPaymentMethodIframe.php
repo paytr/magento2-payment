@@ -21,10 +21,11 @@ class PaytrPaymentMethodIframe extends AbstractMethod
     protected $_canCapturePartial = true;
     protected $_canRefund = true;
     protected $_canRefundInvoicePartial = true;
+
     /**
-     * @return array
+     * @return array[]
      */
-    public function getConfig(): array
+    public function getConfig()
     {
         $objectManager   = ObjectManager::getInstance();
         $logo            = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')
@@ -42,7 +43,7 @@ class PaytrPaymentMethodIframe extends AbstractMethod
     /**
      * @return mixed
      */
-    public function getOrderPlaceRedirectUrl(): mixed
+    public function getOrderPlaceRedirectUrl()
     {
         return ObjectManager::getInstance()->get('Magento\Framework\UrlInterface')->getUrl("paytr/redirect");
     }

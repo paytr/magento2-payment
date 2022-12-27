@@ -65,7 +65,7 @@ class CategoryInstallment extends Value
     /**
      * @return $this|CategoryInstallment
      */
-    public function beforeSave(): CategoryInstallment
+    public function beforeSave()
     {
         $value = $this->getValue();
         $result = [];
@@ -88,7 +88,7 @@ class CategoryInstallment extends Value
      * @return $this|CategoryInstallment
      * @throws LocalizedException
      */
-    public function afterLoad(): CategoryInstallment
+    public function afterLoad()
     {
         if ($this->getValue()) {
             $value = $this->serializer->unserialize($this->getValue());
@@ -104,7 +104,7 @@ class CategoryInstallment extends Value
      * @return array
      * @throws LocalizedException
      */
-    protected function encodeArrayFieldValue(array $value): array
+    protected function encodeArrayFieldValue(array $value)
     {
         $result = [];
         foreach ($value as $category => $creditCardType) {
@@ -119,7 +119,7 @@ class CategoryInstallment extends Value
      * @param  array $inputCategoriesList
      * @return array
      */
-    private function appendUniqueCategories(array $categoriesList, array $inputCategoriesList): array
+    private function appendUniqueCategories(array $categoriesList, array $inputCategoriesList)
     {
         $result = array_merge($categoriesList, $inputCategoriesList);
         return array_values(array_unique($result));

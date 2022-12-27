@@ -36,7 +36,7 @@ class Categories extends Select
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function _toHtml(): string
+    protected function _toHtml()
     {
         if (!$this->getOptions()) {
             $this->setOptions($this->categoryHelper->getCategories());

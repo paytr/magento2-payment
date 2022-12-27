@@ -55,7 +55,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function getScopeInterface(): string
+    public function getScopeInterface()
     {
         return ScopeInterface::SCOPE_STORE;
     }
@@ -108,7 +108,7 @@ class PaytrHelper
     /**
      * @return int|mixed
      */
-    public function getNoInstallment(): int
+    public function getNoInstallment()
     {
         return $this->calculateInstallment($this->getCategoryInstallment(), $this->getCategoryIds())['no_installment'] ?? 0;
     }
@@ -116,7 +116,7 @@ class PaytrHelper
     /**
      * @return int|mixed
      */
-    public function getMaxInstallment(): int
+    public function getMaxInstallment()
     {
         return $this->calculateInstallment($this->getCategoryInstallment(), $this->getCategoryIds())['max_installment'] ?? 0;
     }
@@ -195,7 +195,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function getUserBasket(): string
+    public function getUserBasket()
     {
         $user_basket = [];
         foreach ($this->checkoutSession->getLastRealOrder()->getAllVisibleItems() as $items) {
@@ -211,7 +211,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function getMerchantOid(): string
+    public function getMerchantOid()
     {
         return 'SP' . $this->getRealOrderId() . 'MG' . strtotime($this->getOrder()->getUpdatedAt());
     }
@@ -219,7 +219,7 @@ class PaytrHelper
     /**
      * @return OrderAddressInterface|null
      */
-    public function getBilling(): ?OrderAddressInterface
+    public function getBilling()
     {
         return $this->getOrder()->getBillingAddress();
     }
@@ -227,7 +227,7 @@ class PaytrHelper
     /**
      * @return string|null
      */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return $this->getBilling()->getEmail();
     }
@@ -243,7 +243,7 @@ class PaytrHelper
     /**
      * @return mixed|string
      */
-    public function getCurrency(): string
+    public function getCurrency()
     {
         $currency = $this->getOrder()->getOrderCurrency()->getId();
         return $currency === 'TRY' ? 'TL' : $currency;
@@ -252,7 +252,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function getUsername(): string
+    public function getUsername()
     {
         return $this->getBilling()->getFirstname() . ' ' . $this->getBilling()->getLastname();
     }
@@ -260,7 +260,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function getUserPhone(): string
+    public function getUserPhone()
     {
         return $this->getBilling()->getTelephone();
     }
@@ -269,7 +269,7 @@ class PaytrHelper
      * @return string
      * @throws NoSuchEntityException
      */
-    public function getMerchantOkUrl(): string
+    public function getMerchantOkUrl()
     {
         return $this->_storeManager->getStore()->getBaseUrl() . "paytr/success";
     }
@@ -278,7 +278,7 @@ class PaytrHelper
      * @return string
      * @throws NoSuchEntityException
      */
-    public function getMerchantFailUrl(): string
+    public function getMerchantFailUrl()
     {
         return $this->getMerchantOkUrl();
     }
@@ -286,7 +286,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function getUserAddress(): string
+    public function getUserAddress()
     {
         return $this->getBilling()->getStreet()[0]
             . ' ' . $this->getBilling()->getCity()
@@ -299,7 +299,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function makeHashStr(): string
+    public function makeHashStr()
     {
         return
             $this->getMerchantId()
@@ -317,7 +317,7 @@ class PaytrHelper
     /**
      * @return string
      */
-    public function getToken(): string
+    public function getToken()
     {
         return base64_encode(hash_hmac('sha256', $this->makeHashStr() . $this->getMerchantSalt(), $this->getMerchantKey(), true));
     }
@@ -325,7 +325,7 @@ class PaytrHelper
     /**
      * @return array
      */
-    public function getCategoryIds(): array
+    public function getCategoryIds()
     {
         $ids = [];
         foreach ($this->checkoutSession->getLastRealOrder()->getAllItems() as $items) {
@@ -340,7 +340,7 @@ class PaytrHelper
      * @param  false $in_table
      * @return array|int[]
      */
-    public function calculateInstallment($categoryInstallment, $categoryIds, $in_table = false): array
+    public function calculateInstallment($categoryInstallment, $categoryIds, $in_table = false)
     {
         $current_installments = [];
         if ($in_table) {
@@ -365,7 +365,7 @@ class PaytrHelper
      * @param  $installments
      * @return array|int[]
      */
-    public function getCurrentInstallment($installments): array
+    public function getCurrentInstallment($installments)
     {
         if (in_array('1', $installments)) {
             return [
@@ -388,7 +388,7 @@ class PaytrHelper
     /**
      * @return mixed|string
      */
-    public function getLang(): string
+    public function getLang()
     {
         $objectManager = ObjectManager::getInstance()->get('Magento\Framework\Locale\Resolver')->getLocale();
         return explode('_', $objectManager)[0] ?? 'en';
@@ -398,7 +398,7 @@ class PaytrHelper
      * @return array
      * @throws NoSuchEntityException
      */
-    public function makePostVariables(): array
+    public function makePostVariables()
     {
         return [
             'merchant_id'       =>  $this->getMerchantId(),

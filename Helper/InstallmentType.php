@@ -13,7 +13,7 @@ class InstallmentType
     /**
      * @return string[]
      */
-    public function getInstallmentTypes(): array
+    public function getInstallmentTypes()
     {
         return [
             0 => __('All Installment Options'),

@@ -60,7 +60,7 @@ class Redirect extends \Magento\Framework\View\Element\Template
     /**
      * @return bool
      */
-    protected function _prepareLayout(): bool
+    protected function _prepareLayout()
     {
         try {
             if (!$this->paytrHelper->getOrder()->getRealOrderId()) {

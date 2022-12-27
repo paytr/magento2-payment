@@ -19,7 +19,7 @@ class NotificationUrl extends Field
      * @return string
      * @throws NoSuchEntityException
      */
-    protected function _getElementHtml(AbstractElement $element): string
+    protected function _getElementHtml(AbstractElement $element)
     {
         return $this->_storeManager->getStore()->getBaseUrl().'rest/V1/paytr/callback/';
     }

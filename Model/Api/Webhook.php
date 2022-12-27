@@ -2,7 +2,6 @@
 
 namespace Paytr\Payment\Model\Api;
 
-use Exception;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Sales\Api\TransactionRepositoryInterface;
@@ -54,9 +53,8 @@ class Webhook
 
     /**
      * @return string
-     * @throws Exception
      */
-    public function getResponse(): string
+    public function getResponse()
     {
         $response = $this->responseNormalize($this->request->getBodyParams());
         return array_key_exists('status', $response) && $response['status'] === 'success'
@@ -65,10 +63,10 @@ class Webhook
     }
 
     /**
-     * @param  $response
+     * @param $response
      * @return string
      */
-    public function getSuccessResponse($response): string
+    public function getSuccessResponse($response)
     {
         if ($this->validateHash($response, $response['hash'])) {
             $order_id   = $this->normalizeMerchantOid($response['merchant_oid']);
@@ -80,11 +78,10 @@ class Webhook
     }
 
     /**
-     * @param  $response
+     * @param $response
      * @return string
-     * @throws Exception
      */
-    public function getFailedResponse($response): string
+    public function getFailedResponse($response)
     {
         if ($this->validateHash($response, $response['hash'])) {
             $order_id   = $this->normalizeMerchantOid($response['merchant_oid']);
@@ -101,20 +98,20 @@ class Webhook
     }
 
     /**
-     * @param  $response
-     * @param  $hash
+     * @param $response
+     * @param $hash
      * @return bool
      */
-    public function validateHash($response, $hash): bool
+    public function validateHash($response, $hash)
     {
         return base64_encode(hash_hmac('sha256', $response['merchant_oid'] . $this->paytrHelper->getMerchantSalt() . $response['status'] . $response['total_amount'], $this->paytrHelper->getMerchantKey(), true)) === $hash;
     }
 
     /**
-     * @param  $params
+     * @param $params
      * @return array
      */
-    public function responseNormalize($params): array
+    public function responseNormalize($params)
     {
         $items = [];
         foreach ($params as $key => $param) {
@@ -124,10 +121,10 @@ class Webhook
     }
 
     /**
-     * @param  $merchant_oid
+     * @param $merchant_oid
      * @return mixed|string
      */
-    public function normalizeMerchantOid($merchant_oid): string
+    public function normalizeMerchantOid($merchant_oid)
     {
         $merchant_oid = explode('SP', $merchant_oid);
         $merchant_oid = explode('MG', $merchant_oid[1]);
@@ -135,11 +132,11 @@ class Webhook
     }
 
     /**
-     * @param  $order
-     * @param  $response
+     * @param $order
+     * @param $response
      * @return string
      */
-    public function addTransactionToOrder($order, $response): string
+    public function addTransactionToOrder($order, $response)
     {
         if ($order->getState()) {
             $payment = $order->getPayment();
@@ -169,11 +166,11 @@ class Webhook
     }
 
     /**
-     * @param  $response
-     * @param  $order
+     * @param $response
+     * @param $order
      * @return string
      */
-    public function customNote($response, $order): string
+    public function customNote($response, $order)
     {
         $currency               = $this->orderFactory->create()->load($order->getRealOrderId());
         $currency               = $currency->getOrderCurrency()->getId();

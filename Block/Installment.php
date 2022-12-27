@@ -55,7 +55,7 @@ class Installment extends Template
     /**
      * @return array|int[]
      */
-    public function installmentSettings(): array
+    public function installmentSettings()
     {
         return $this->paytrHelper->calculateInstallment(
             $this->paytrHelper->getCategoryInstallment(),
@@ -99,7 +99,7 @@ class Installment extends Template
     /**
      * @return array
      */
-    public function getProductIds(): array
+    public function getProductIds()
     {
         $product_ids    = [];
         $productId      = $this->getCurrentProduct()->getId();
