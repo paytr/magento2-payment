@@ -140,26 +140,22 @@ class Webhook
     {
         if ($order->getState()) {
             $payment = $order->getPayment();
+            $payment->setLastTransId($response['merchant_oid']);
             $payment->setTransactionId($response['merchant_oid']);
-            if (in_array($order->getState(), [
-                Order::STATE_HOLDED,
-                Order::STATE_PROCESSING,
-                Order::STATE_CANCELED,
-                Order::STATE_CLOSED,
-                Order::STATE_COMPLETE,
-            ])) {
-                return 'OK';
-            }
-            $trn = $payment->addTransaction(Transaction::TYPE_ORDER, null, true);
-            $trn->setIsClosed(1)->save();
+            $transaction = $this->transactionBuilder->setPayment($payment)
+                ->setOrder($order)
+                ->setTransactionId($response['merchant_oid'])
+                ->setAdditionalInformation(
+                    [Transaction::RAW_DETAILS => (array) $response]
+                )
+                ->setFailSafe(true)
+                ->build(Transaction::TYPE_ORDER);
             $payment->addTransactionCommentsToOrder(
-                $trn,
+                $transaction,
                 $this->customNote($response, $order)
             );
             $payment->setParentTransactionId(null);
             $payment->save();
-            $order->setStatus($this->paytrHelper->getOrderStatus());
-            $order->save();
             return 'OK';
         }
         return 'HATA: Sipariş durumu tamamlanmadı. Tekrar deneniyor.';

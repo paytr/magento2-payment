@@ -6,7 +6,7 @@
                 <active>1</active>
                 <model>Paytr\Payment\Model\PaytrPaymentMethodIframe</model>
                 <title>Kredi / Banka Kartı</title>
-                <order_status>payment_review</order_status>
+                <order_status>pending_payment</order_status>
                 <merchant_id> </merchant_id>
                 <merchant_key> </merchant_key>
                 <merchant_salt> </merchant_salt>

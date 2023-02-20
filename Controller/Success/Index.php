@@ -26,7 +26,6 @@ class Index extends \Magento\Framework\App\Action\Action
     private $checkoutSession;
 
     /**
-     *
      * @var SuccessValidator
      */
     private $successValidator;
@@ -56,7 +55,10 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $order = $this->checkoutSession->getLastRealOrder();
-        $order->setState(Order::STATE_PROCESSING)->setStatus(Order::STATE_PROCESSING)->save();
+        $order->setState(Order::STATE_PROCESSING, true);
+        $order->setStatus(Order::STATE_PROCESSING);
+        $order->addStatusToHistory($order->getStatus(), 'Order processed successfully with reference');
+        $order->save();
         $this->checkoutSession->setLastOrderId($order->getId())
             ->setLastSuccessQuoteId($order->getQuoteId())
             ->setLastRealOrderId($order->getIncrementId())
