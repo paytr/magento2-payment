@@ -2,7 +2,7 @@
     "name": "paytr/magento2-payment",
     "description": "PayTR Magento2 Payment Module",
     "type": "magento2-module",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "license": "MIT",
     "authors": [{
         "name": "PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş.",

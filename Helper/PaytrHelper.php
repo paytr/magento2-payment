@@ -110,7 +110,7 @@ class PaytrHelper
      */
     public function getNoInstallment()
     {
-        return $this->calculateInstallment($this->getCategoryInstallment(), $this->getCategoryIds())['no_installment'] ?? 0;
+        return $this->calculateInstallment($this->getCategoryInstallment(), $this->getCategoryIds())['no_installment'] ?? [];
     }
 
     /**
@@ -237,7 +237,7 @@ class PaytrHelper
      */
     public function getPaymentAmount()
     {
-        return substr(str_replace('.', '', $this->getOrder()->getBaseGrandTotal()), 0, -2);
+        return substr(str_replace('.', '', $this->getOrder()->getGrandTotal()), 0, -2);
     }
 
     /**
@@ -343,6 +343,9 @@ class PaytrHelper
     public function calculateInstallment($categoryInstallment, $categoryIds, $in_table = false)
     {
         $current_installments = [];
+        if(!is_array($categoryInstallment)) {
+            $categoryInstallment = [$categoryInstallment];
+        }
         if ($in_table) {
             foreach ($categoryIds as $id) {
                 if (array_key_exists($id, $categoryInstallment)) {

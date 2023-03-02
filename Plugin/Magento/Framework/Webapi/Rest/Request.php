@@ -17,7 +17,7 @@ class Request
      */
     public function afterGetAcceptTypes(\Magento\Framework\Webapi\Rest\Request $subject, array $result)
     {
-        if ($subject->getRequestUri() === '/rest/V1/paytr/callback/' || $subject->getRequestUri() === '/index.php/rest/V1/paytr/callback/') {
+        if (strpos($subject->getRequestUri(), 'rest/V1/paytr/callback') !== false) {
             $result = ['text/html'];
         }
         return $result;

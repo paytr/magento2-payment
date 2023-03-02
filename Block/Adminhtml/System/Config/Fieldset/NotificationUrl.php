@@ -13,7 +13,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
  */
 class NotificationUrl extends Field
 {
-
     /**
      * @param  AbstractElement $element
      * @return string
@@ -21,6 +20,6 @@ class NotificationUrl extends Field
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        return $this->_storeManager->getStore()->getBaseUrl().'rest/V1/paytr/callback/';
+      return $this->_storeManager->getStore()->getBaseUrl().'rest/V1/paytr/callback/';
     }
 }

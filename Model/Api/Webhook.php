@@ -156,6 +156,8 @@ class Webhook
             );
             $payment->setParentTransactionId(null);
             $payment->save();
+            $order->setStatus($this->paytrHelper->getOrderStatus());
+            $order->save();
             return 'OK';
         }
         return 'HATA: Sipariş durumu tamamlanmadı. Tekrar deneniyor.';
