@@ -156,7 +156,8 @@ class Webhook
             );
             $payment->setParentTransactionId(null);
             $payment->save();
-            $order->setStatus($this->paytrHelper->getOrderStatus());
+            $order->setState(Order::STATE_PROCESSING, true);
+            $order->setStatus(Order::STATE_PROCESSING);
             $order->save();
             return 'OK';
         }
