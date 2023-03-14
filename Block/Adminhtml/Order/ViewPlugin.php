@@ -4,6 +4,7 @@ namespace Paytr\Payment\Block\Adminhtml\Order;
 
 use Magento\Sales\Block\Adminhtml\Order\View;
 use Magento\Framework\View\LayoutInterface;
+use Magento\Sales\Model\Order;
 
 class ViewPlugin
 {
