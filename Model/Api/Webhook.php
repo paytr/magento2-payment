@@ -6,10 +6,12 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Builder as TransactionBuilder;
 use Magento\Sales\Model\OrderFactory;
 use Paytr\Payment\Helper\PaytrHelper;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Webhook
@@ -24,6 +26,8 @@ class Webhook
     protected $transactionRepository;
     protected $request;
     protected $paytrHelper;
+    private $orderSender;
+    private $logger;
 
     /**
      * Webhook constructor.
@@ -41,7 +45,9 @@ class Webhook
         TransactionBuilder $tb,
         TransactionRepositoryInterface $transactionRepository,
         Request $request,
-        PaytrHelper $paytrHelper
+        PaytrHelper $paytrHelper,
+        OrderSender $orderSender,
+        LoggerInterface $logger,
     ) {
         $this->orderFactory             = $orderFactory;
         $this->config                   = $context->getScopeConfig();
@@ -49,6 +55,8 @@ class Webhook
         $this->transactionRepository    = $transactionRepository;
         $this->request                  = $request;
         $this->paytrHelper              = $paytrHelper;
+        $this->orderSender              = $orderSender;
+        $this->logger                   = $logger;
     }
 
     /**
@@ -86,7 +94,8 @@ class Webhook
         if ($this->validateHash($response, $response['hash'])) {
             $order_id   = $this->normalizeMerchantOid($response['merchant_oid']);
             $order      = $this->orderFactory->create()->load($order_id);
-            if($order->getState() == Order::STATE_PENDING_PAYMENT) {
+            if($order->getState() == Order::STATE_PENDING_PAYMENT ||
+                $order->getState() == Order::STATE_NEW) {
               $order->addStatusHistoryComment($response['failed_reason_msg']);
               $order->cancel();
               $order->setState(Order::STATE_CANCELED);
@@ -142,30 +151,37 @@ class Webhook
     public function addTransactionToOrder($order, $response)
     {
         if ($order->getState()) {
-          if($order->getState() == Order::STATE_PENDING_PAYMENT) {
-            $payment = $order->getPayment();
-            $payment->setLastTransId($response['merchant_oid']);
-            $payment->setTransactionId($response['merchant_oid']);
-            $transaction = $this->transactionBuilder->setPayment($payment)
-                ->setOrder($order)
-                ->setTransactionId($response['merchant_oid'])
-                ->setAdditionalInformation(
-                    [Transaction::RAW_DETAILS => (array) $response]
-                )
-                ->setFailSafe(true)
-                ->build(Transaction::TYPE_ORDER);
-            $payment->addTransactionCommentsToOrder(
-                $transaction,
-                $this->customNote($response, $order)
-            );
-            $payment->setParentTransactionId(null);
-            $payment->save();
-            $order->setState(Order::STATE_PROCESSING, true);
-            $order->setStatus(Order::STATE_PROCESSING);
-            $order->save();
+            if($order->getState() == Order::STATE_PENDING_PAYMENT ||
+            $order->getState() == Order::STATE_NEW ||
+            $order->getState() == Order::STATE_CANCELED) {
+                $payment = $order->getPayment();
+                $payment->setLastTransId($response['merchant_oid']);
+                $payment->setTransactionId($response['merchant_oid']);
+                $transaction = $this->transactionBuilder->setPayment($payment)
+                    ->setOrder($order)
+                    ->setTransactionId($response['merchant_oid'])
+                    ->setAdditionalInformation(
+                        [Transaction::RAW_DETAILS => (array) $response]
+                    )
+                    ->setFailSafe(true)
+                    ->build(Transaction::TYPE_ORDER);
+                $payment->addTransactionCommentsToOrder(
+                    $transaction,
+                    $this->customNote($response, $order)
+                );
+                $payment->setParentTransactionId(null);
+                $payment->save();
+                $order->setState(Order::STATE_PROCESSING, true);
+                $order->setStatus(Order::STATE_PROCESSING);
+                $order->save();
+                try {
+                    $this->orderSender->send($order);
+                } catch (\Throwable $e) {
+                    $this->logger->critical($e);
+                }
+                return 'OK';
+            }
             return 'OK';
-          }
-          return 'OK';
         }
         return 'HATA: Sipariş durumu tamamlanmadı. Tekrar deneniyor.';
     }

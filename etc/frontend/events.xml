@@ -3,7 +3,4 @@
     <event name="controller_action_predispatch">
         <observer name="paytr_controller_dispatch" instance="Paytr\Payment\Observer\ControllerActionPredispatch" shared="false" />
     </event>
-    <event name="checkout_onepage_controller_success_action">
-        <observer name="checkout_onepage_controller_success_action_sendmail" instance="Paytr\Payment\Observer\SendMailOnOrderSuccess" shared="false" />
-      </event>
 </config>
