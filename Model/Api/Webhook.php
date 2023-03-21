@@ -47,7 +47,7 @@ class Webhook
         Request $request,
         PaytrHelper $paytrHelper,
         OrderSender $orderSender,
-        LoggerInterface $logger,
+        LoggerInterface $logger
     ) {
         $this->orderFactory             = $orderFactory;
         $this->config                   = $context->getScopeConfig();
