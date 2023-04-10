@@ -81,12 +81,13 @@ class PaytrPaymentMethodIframe extends AbstractMethod
                     ->setTransactionId($transactionId . '-' . \Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND)
                     ->setFailSafe(true)
                     ->build(Transaction::TYPE_REFUND);
+                $refundTransaction->save();
                 $payment->addTransactionCommentsToOrder(
                     $refundTransaction,
                     "<b>PAYTR NOTICE - Refund Complete</b><br/>"
                 );
                 $payment->getOrder()->save();
-                $refundTransaction->save();
+                $payment->save();
                 return $this;
             }
         } catch (Exception $e) {

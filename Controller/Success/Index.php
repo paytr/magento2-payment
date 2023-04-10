@@ -55,8 +55,12 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $order = $this->checkoutSession->getLastRealOrder();
-        $order->setState(Order::STATE_PENDING_PAYMENT);
-        $order->save();
+        if($order->getState() == Order::STATE_PENDING_PAYMENT ||
+            $order->getState() == Order::STATE_NEW ||
+            $order->getState() == null) {
+                $order->setState(Order::STATE_PENDING_PAYMENT);
+                $order->save();
+        }
         $this->checkoutSession->setLastOrderId($order->getId())
             ->setLastSuccessQuoteId($order->getQuoteId())
             ->setLastRealOrderId($order->getIncrementId())
