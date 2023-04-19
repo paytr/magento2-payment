@@ -152,8 +152,11 @@ class Webhook
     {
         if ($order->getState()) {
             if($order->getState() == Order::STATE_PENDING_PAYMENT ||
-            $order->getState() == Order::STATE_NEW ||
-            $order->getState() == Order::STATE_CANCELED) {
+                $order->getState() == Order::STATE_NEW ||
+                $order->getState() == Order::STATE_CANCELED) {
+                $order->setState(Order::STATE_PROCESSING, true);
+                $order->setStatus(Order::STATE_PROCESSING);
+                $order->save();
                 $payment = $order->getPayment();
                 $payment->setLastTransId($response['merchant_oid']);
                 $payment->setTransactionId($response['merchant_oid']);
@@ -171,8 +174,6 @@ class Webhook
                 );
                 $payment->setParentTransactionId(null);
                 $payment->save();
-                $order->setState(Order::STATE_PROCESSING, true);
-                $order->setStatus(Order::STATE_PROCESSING);
                 $order->save();
                 try {
                     $this->orderSender->send($order);
