@@ -111,7 +111,7 @@ class PaytrPaymentMethodIframe extends AbstractMethod
             curl_close($ch);
             $result = json_decode($result, 1);
             if ($result['status'] !== 'success') {
-                throw new Exception($result['err_no'] . " - " . $result['err_msg']);
+                throw new Exception(__('Payment refunding error.'));
             } else {
                 return true;
             }
