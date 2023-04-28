@@ -11,6 +11,8 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Index
@@ -29,6 +31,14 @@ class Index extends \Magento\Framework\App\Action\Action
      * @var SuccessValidator
      */
     private $successValidator;
+    /**
+     * @var OrderSender
+     */
+    private $orderSender;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      *
@@ -36,16 +46,22 @@ class Index extends \Magento\Framework\App\Action\Action
      * @param OrderRepositoryInterface $orderRepository
      * @param CheckoutSession          $checkoutSession
      * @param SuccessValidator         $successValidator
+     * @param OrderSender $orderSender
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
         OrderRepositoryInterface $orderRepository,
         CheckoutSession $checkoutSession,
-        SuccessValidator $successValidator
+        SuccessValidator $successValidator,
+        OrderSender $orderSender,
+        LoggerInterface $logger
     ) {
         parent::__construct($context);
         $this->checkoutSession = $checkoutSession;
         $this->successValidator = $successValidator;
+        $this->orderSender = $orderSender;
+        $this->logger = $logger;
     }
 
     /**
@@ -59,6 +75,11 @@ class Index extends \Magento\Framework\App\Action\Action
             $order->getState() == Order::STATE_NEW ||
             $order->getState() == null) {
                 $order->setState(Order::STATE_PENDING_PAYMENT);
+                try {
+                    $this->orderSender->send($order);
+                } catch (\Throwable $e) {
+                    $this->logger->critical($e);
+                }
                 $order->save();
         }
         $this->checkoutSession->setLastOrderId($order->getId())
