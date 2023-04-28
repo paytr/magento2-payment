@@ -8,6 +8,8 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ControllerActionPredispatch
@@ -36,6 +38,14 @@ class ControllerActionPredispatch implements ObserverInterface
      * @var mixed
      */
     protected $urlBuilder;
+    /**
+     * @var OrderSender
+     */
+    private $orderSender;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * ControllerActionPredispatch constructor.
@@ -43,15 +53,21 @@ class ControllerActionPredispatch implements ObserverInterface
      * @param Session      $checkoutSession
      * @param OrderFactory $orderFactory
      * @param Http         $redirect
+     * @param OrderSender $orderSender
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Session $checkoutSession,
         OrderFactory $orderFactory,
-        Http $redirect
+        Http $redirect,
+        OrderSender $orderSender,
+        LoggerInterface $logger
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->orderFactory = $orderFactory;
         $this->_redirect = $redirect;
+        $this->orderSender = $orderSender;
+        $this->logger = $logger;
     }
 
     /**
@@ -64,9 +80,16 @@ class ControllerActionPredispatch implements ObserverInterface
             $orderId = $this->checkoutSession->getLastOrderId();
             if ($orderId) {
                 $order = $this->orderFactory->create()->load($orderId);
-                if (($order->getPayment()->getMethodInstance()->getCode()== "paytr" || $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe") and $order->getState()== Order::STATE_NEW) {
+                if (($order->getPayment()->getMethodInstance()->getCode()== "paytr" ||
+                        $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe"
+                    ) and $order->getState()== Order::STATE_NEW) {
                     $this->urlBuilder = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
                     $url = $this->urlBuilder->getUrl("paytr/redirect");
+                    try {
+                        $this->orderSender->send($order);
+                    } catch (\Throwable $e) {
+                        $this->logger->critical($e);
+                    }
                     $this->_redirect->setRedirect($url);
                 }
             }

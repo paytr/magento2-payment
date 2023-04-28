@@ -175,11 +175,6 @@ class Webhook
                 $payment->setParentTransactionId(null);
                 $payment->save();
                 $order->save();
-                try {
-                    $this->orderSender->send($order);
-                } catch (\Throwable $e) {
-                    $this->logger->critical($e);
-                }
                 return 'OK';
             }
             return 'OK';
