@@ -6,12 +6,10 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Builder as TransactionBuilder;
 use Magento\Sales\Model\OrderFactory;
 use Paytr\Payment\Helper\PaytrHelper;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class Webhook
@@ -26,8 +24,6 @@ class Webhook
     protected $transactionRepository;
     protected $request;
     protected $paytrHelper;
-    private $orderSender;
-    private $logger;
 
     /**
      * Webhook constructor.
@@ -46,8 +42,6 @@ class Webhook
         TransactionRepositoryInterface $transactionRepository,
         Request $request,
         PaytrHelper $paytrHelper,
-        OrderSender $orderSender,
-        LoggerInterface $logger,
     ) {
         $this->orderFactory             = $orderFactory;
         $this->config                   = $context->getScopeConfig();
@@ -55,8 +49,6 @@ class Webhook
         $this->transactionRepository    = $transactionRepository;
         $this->request                  = $request;
         $this->paytrHelper              = $paytrHelper;
-        $this->orderSender              = $orderSender;
-        $this->logger                   = $logger;
     }
 
     /**
