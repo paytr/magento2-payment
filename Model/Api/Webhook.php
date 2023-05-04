@@ -6,12 +6,10 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Builder as TransactionBuilder;
 use Magento\Sales\Model\OrderFactory;
 use Paytr\Payment\Helper\PaytrHelper;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class Webhook
@@ -26,8 +24,6 @@ class Webhook
     protected $transactionRepository;
     protected $request;
     protected $paytrHelper;
-    private $orderSender;
-    private $logger;
 
     /**
      * Webhook constructor.
@@ -45,9 +41,7 @@ class Webhook
         TransactionBuilder $tb,
         TransactionRepositoryInterface $transactionRepository,
         Request $request,
-        PaytrHelper $paytrHelper,
-        OrderSender $orderSender,
-        LoggerInterface $logger
+        PaytrHelper $paytrHelper
     ) {
         $this->orderFactory             = $orderFactory;
         $this->config                   = $context->getScopeConfig();
@@ -55,8 +49,6 @@ class Webhook
         $this->transactionRepository    = $transactionRepository;
         $this->request                  = $request;
         $this->paytrHelper              = $paytrHelper;
-        $this->orderSender              = $orderSender;
-        $this->logger                   = $logger;
     }
 
     /**
@@ -96,12 +88,12 @@ class Webhook
             $order      = $this->orderFactory->create()->load($order_id);
             if($order->getState() == Order::STATE_PENDING_PAYMENT ||
                 $order->getState() == Order::STATE_NEW) {
-              $order->addStatusHistoryComment($response['failed_reason_msg']);
-              $order->cancel();
-              $order->setState(Order::STATE_CANCELED);
-              $order->setStatus("canceled");
-              $order->save();
-              return 'OK';
+                $order->addStatusHistoryComment($response['failed_reason_msg']);
+                $order->cancel();
+                $order->setState(Order::STATE_CANCELED);
+                $order->setStatus("canceled");
+                $order->save();
+                return 'OK';
             }
             return 'OK';
         } else {
@@ -152,8 +144,11 @@ class Webhook
     {
         if ($order->getState()) {
             if($order->getState() == Order::STATE_PENDING_PAYMENT ||
-            $order->getState() == Order::STATE_NEW ||
-            $order->getState() == Order::STATE_CANCELED) {
+                $order->getState() == Order::STATE_NEW ||
+                $order->getState() == Order::STATE_CANCELED) {
+                $order->setState(Order::STATE_PROCESSING, true);
+                $order->setStatus(Order::STATE_PROCESSING);
+                $order->save();
                 $payment = $order->getPayment();
                 $payment->setLastTransId($response['merchant_oid']);
                 $payment->setTransactionId($response['merchant_oid']);
@@ -171,14 +166,7 @@ class Webhook
                 );
                 $payment->setParentTransactionId(null);
                 $payment->save();
-                $order->setState(Order::STATE_PROCESSING, true);
-                $order->setStatus(Order::STATE_PROCESSING);
                 $order->save();
-                try {
-                    $this->orderSender->send($order);
-                } catch (\Throwable $e) {
-                    $this->logger->critical($e);
-                }
                 return 'OK';
             }
             return 'OK';

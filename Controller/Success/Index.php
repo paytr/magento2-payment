@@ -11,6 +11,8 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Index
@@ -31,21 +33,36 @@ class Index extends \Magento\Framework\App\Action\Action
     private $successValidator;
 
     /**
+     * @var OrderSender
+     */
+    private $orderSender;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      *
      * @param Context                  $context
      * @param OrderRepositoryInterface $orderRepository
      * @param CheckoutSession          $checkoutSession
      * @param SuccessValidator         $successValidator
+     * @param OrderSender              $orderSender
+     * @param LoggerInterface          $logger
      */
     public function __construct(
         Context $context,
         OrderRepositoryInterface $orderRepository,
         CheckoutSession $checkoutSession,
-        SuccessValidator $successValidator
+        SuccessValidator $successValidator,
+        OrderSender $orderSender,
+        LoggerInterface $logger
     ) {
         parent::__construct($context);
         $this->checkoutSession = $checkoutSession;
         $this->successValidator = $successValidator;
+        $this->orderSender = $orderSender;
+        $this->logger = $logger;
     }
 
     /**
@@ -55,8 +72,17 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $order = $this->checkoutSession->getLastRealOrder();
-        $order->setState(Order::STATE_PENDING_PAYMENT);
-        $order->save();
+        if($order->getState() == Order::STATE_PENDING_PAYMENT ||
+            $order->getState() == Order::STATE_NEW ||
+            $order->getState() == null) {
+            $order->setState(Order::STATE_PENDING_PAYMENT);
+            $order->save();
+            try {
+                $this->orderSender->send($order);
+            } catch (\Throwable $e) {
+                $this->logger->critical($e);
+            }
+        }
         $this->checkoutSession->setLastOrderId($order->getId())
             ->setLastSuccessQuoteId($order->getQuoteId())
             ->setLastRealOrderId($order->getIncrementId())

@@ -64,7 +64,9 @@ class ControllerActionPredispatch implements ObserverInterface
             $orderId = $this->checkoutSession->getLastOrderId();
             if ($orderId) {
                 $order = $this->orderFactory->create()->load($orderId);
-                if (($order->getPayment()->getMethodInstance()->getCode()== "paytr" || $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe") and $order->getState()== Order::STATE_NEW) {
+                if (($order->getPayment()->getMethodInstance()->getCode()== "paytr" ||
+                        $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe"
+                    ) and $order->getState()== Order::STATE_NEW) {
                     $this->urlBuilder = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
                     $url = $this->urlBuilder->getUrl("paytr/redirect");
                     $this->_redirect->setRedirect($url);
