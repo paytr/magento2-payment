@@ -10,8 +10,6 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Builder as TransactionBuilder;
 use Magento\Sales\Model\OrderFactory;
 use Paytr\Payment\Helper\PaytrHelper;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class Webhook
@@ -26,8 +24,6 @@ class Webhook
     protected $transactionRepository;
     protected $request;
     protected $paytrHelper;
-    private $orderSender;
-    private $logger;
 
     /**
      * Webhook constructor.
@@ -38,8 +34,6 @@ class Webhook
      * @param TransactionRepositoryInterface $transactionRepository
      * @param Request                        $request
      * @param PaytrHelper                    $paytrHelper
-     * @param OrderSender                    $orderSender
-     * @param LoggerInterface                $logger
      */
     public function __construct(
         OrderFactory $orderFactory,
@@ -47,9 +41,7 @@ class Webhook
         TransactionBuilder $tb,
         TransactionRepositoryInterface $transactionRepository,
         Request $request,
-        PaytrHelper $paytrHelper,
-        OrderSender $orderSender,
-        LoggerInterface $logger
+        PaytrHelper $paytrHelper
     ) {
         $this->orderFactory             = $orderFactory;
         $this->config                    = $context->getScopeConfig();
@@ -57,8 +49,6 @@ class Webhook
         $this->transactionRepository    = $transactionRepository;
         $this->request                  = $request;
         $this->paytrHelper              = $paytrHelper;
-        $this->orderSender              = $orderSender;
-        $this->logger                   = $logger;
     }
 
     /**
@@ -177,11 +167,6 @@ class Webhook
                 $payment->setParentTransactionId(null);
                 $payment->save();
                 $order->save();
-                try {
-                    $this->orderSender->send($order);
-                } catch (\Throwable $e) {
-                    $this->logger->critical($e);
-                }
                 return 'OK';
             }
             return 'OK';
