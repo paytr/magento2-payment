@@ -46,7 +46,7 @@ class XWwwFormUrlencoded implements \Magento\Framework\Webapi\Rest\Request\Deser
         }
         try {
             $decodedBody = $this->decoder->decode($encodedBody);
-        } catch (\Zend_Json_Exception $e) {
+        } catch (\InvalidArgumentException $e) {
             if ($this->appState->getMode() !== State::MODE_DEVELOPER) {
                 throw new \Magento\Framework\Webapi\Exception(new Phrase('Decoding error.'));
             } else {
