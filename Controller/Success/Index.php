@@ -58,8 +58,11 @@ class Index extends \Magento\Framework\App\Action\Action
         if($order->getState() == Order::STATE_PENDING_PAYMENT ||
             $order->getState() == Order::STATE_NEW ||
             $order->getState() == null) {
-                $order->setState(Order::STATE_PENDING_PAYMENT);
-                $order->save();
+            $order->setState(Order::STATE_PENDING_PAYMENT);
+            if ($order->getPayment()->getMethodInstance()->getCode() == "paytr_iframe_transfer") {
+                $order->setStatus('paytr_pending');
+            }
+            $order->save();
         }
         $this->checkoutSession->setLastOrderId($order->getId())
             ->setLastSuccessQuoteId($order->getQuoteId())
