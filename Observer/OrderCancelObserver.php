@@ -27,7 +27,9 @@ class OrderCancelObserver implements ObserverInterface
         $transactions = $this->transactions->create()->addOrderIdFilter($order->getId());
         if($transactions->getTotalCount() > 0 and
             ($order->getPayment()->getMethodInstance()->getCode()== "paytr" ||
-                $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe")) {
+                $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe" ||
+                $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe_transfer"
+            )) {
             // ödeme iade edilecek
             return $this->paytrPaymentMethodIframe->refund($order->getPayment(), $order->getGrandTotal());
         }
