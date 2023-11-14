@@ -25,7 +25,7 @@ class OrderCancelObserver implements ObserverInterface
         $order = $observer->getEvent()->getOrder();
 
         $transactions = $this->transactions->create()->addOrderIdFilter($order->getId());
-        if($transactions->getTotalCount() > 0 and
+        if($transactions->getTotalCount() > 0 &&
             ($order->getPayment()->getMethodInstance()->getCode()== "paytr" ||
                 $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe" ||
                 $order->getPayment()->getMethodInstance()->getCode()== "paytr_iframe_transfer"
