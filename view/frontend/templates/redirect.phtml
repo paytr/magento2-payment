@@ -7,3 +7,9 @@
         iFrameResize({},'#paytriframe');
     });
 </script>
+<script type="text/javascript">
+    setTimeout(function(){
+        alert("Bu işlem için ayrılan süre dolmuştur. Lütfen işlemi tekrar başlatın.");
+        window.location.replace("<?php echo json_decode($this->getAction())->redirect_url;?>");
+    }, <?php echo json_decode($this->getAction())->timeout * 60 * 1000;?>);
+</script>

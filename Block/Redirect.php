@@ -79,14 +79,16 @@ class Redirect extends \Magento\Framework\View\Element\Template
                 header('Location: ' . $this->_storeManager->getStore()->getBaseUrl());
                 return false;
             }
+            $urlBuilder = ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+            $errorUrl = $urlBuilder->getUrl("paytr/error");
             if($order->getState() == Order::STATE_CANCELED) {
-                $this->urlBuilder = ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
-                $url = $this->urlBuilder->getUrl("paytr/error");
-                $this->_redirect->setRedirect($url);
+                $this->_redirect->setRedirect($errorUrl);
             }
             $paytr_data = [
                 'status' => 'success',
                 'token' => $this->paytrRequestHelper->getPaytrToken(),
+                'timeout' => $this->paytrHelper->getTimeoutLimit(),
+                'redirect_url' => $errorUrl,
                 'message' => ''
             ];
             $this->setAction(json_encode($paytr_data));
