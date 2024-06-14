@@ -45,7 +45,7 @@ class Webhook
         PaytrHelper $paytrHelper
     ) {
         $this->orderFactory             = $orderFactory;
-        $this->config                    = $context->getScopeConfig();
+        $this->config                   = $context->getScopeConfig();
         $this->transactionBuilder       = $tb;
         $this->transactionRepository    = $transactionRepository;
         $this->request                  = $request;
@@ -84,27 +84,35 @@ class Webhook
      */
     public function getFailedResponse($response)
     {
-        if ($this->validateHash($response, $response['hash'])) {
-            $order_id   = $this->normalizeMerchantOid($response['merchant_oid']);
-            $order      = $this->orderFactory->create()->load($order_id);
-            if($order->getState() == Order::STATE_PENDING_PAYMENT ||
-                $order->getState() == Order::STATE_NEW) {
-                $transactionInterface = ObjectManager::getInstance()
-                    ->get('Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory');
-                $transactions = $transactionInterface->create()->addOrderIdFilter($order->getId());
-                if($transactions->getTotalCount() == 0) {
-                    $order->addStatusHistoryComment($response['failed_reason_msg']);
-                    $order->cancel();
-                    $order->setState(Order::STATE_CANCELED);
-                    $order->setStatus("canceled");
-                    $order->save();
+        /*
+         * Bu alan için güncelleme yapılacak. Asenkron başarısız işlemler kabul ediliyor ve tüm
+         * koşulları sağlayıyor.
+            if ($this->validateHash($response, $response['hash'])) {
+                $order_id   = $this->normalizeMerchantOid($response['merchant_oid']);
+                $order      = $this->orderFactory->create()->load($order_id);
+
+                if($order->getState() == Order::STATE_PENDING_PAYMENT ||
+                    $order->getState() == Order::STATE_NEW) {
+
+                    $transactionInterface = ObjectManager::getInstance()
+                        ->get('Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory');
+                    $transactions = $transactionInterface->create()->addOrderIdFilter($order->getId());
+                    if($transactions->getTotalCount() == 0) {
+                        $order->addStatusHistoryComment($response['failed_reason_msg']);
+                        $order->cancel();
+                        $order->setState(Order::STATE_CANCELED);
+                        $order->setStatus("canceled");
+                        $order->save();
+                    }
+
+                  return 'OK';
                 }
-              return 'OK';
+                return 'OK';
+            } else {
+                return 'PAYTR notification failed: bad hash';
             }
-            return 'OK';
-        } else {
-            return 'PAYTR notification failed: bad hash';
-        }
+        */
+        return 'OK';
     }
 
     /**

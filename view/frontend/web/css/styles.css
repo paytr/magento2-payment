@@ -1,0 +1,5 @@
+.payment-method-logo {
+    background-image: url('../images/paytr-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}

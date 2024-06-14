@@ -1,6 +1,6 @@
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <div class="payment-method-title field choice">
-        <img data-bind="attr: {src: getPaymentAcceptanceMarkSrc(), style: isLogoVisible()}" width="76" class="payment-icon"/>
+        <div data-bind="attr: {style: isLogoVisible()}" class="payment-method-logo"></div>
         <input type="radio"
                name="payment[method]"
                class="radio"

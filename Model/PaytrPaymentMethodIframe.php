@@ -34,8 +34,8 @@ class PaytrPaymentMethodIframe extends AbstractMethod
         return [
             'payment' => [
                 'paytr' => [
-                    'logo_url' => 'https://www.paytr.com/img/general/PayTR-Odeme-Kurulusu.svg?v01',
-                    'logo_visible' => $logo ? 'display: inline' : 'display: none'
+                    'logo_url' => '../images/paytr-icon.svg',
+                    'logo_visible' => $logo ? 'display: inline-block; width: 50px; height: 23px; vertical-align: middle;' : 'display: none'
                 ]
             ]
         ];
