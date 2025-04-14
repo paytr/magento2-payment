@@ -59,7 +59,7 @@ class Webhook
         $response = $this->responseNormalize($this->request->getBodyParams());
         return array_key_exists('status', $response) && $response['status'] === 'success'
             ? $this->getSuccessResponse($response)
-            : 'OK';
+            : die('OK');
     }
 
     /**
@@ -143,9 +143,9 @@ class Webhook
                 $payment->setParentTransactionId(null);
                 $payment->save();
                 $order->save();
-                return 'OK';
+                die('OK');
             }
-            return 'OK';
+            die('OK');
         }
         return 'HATA: Sipariş durumu tamamlanmadı. Tekrar deneniyor.';
     }
