@@ -51,6 +51,12 @@ class Webhook
         $this->paytrHelper              = $paytrHelper;
     }
 
+    public function returnOk()
+    {
+        echo chr(79) . chr(75);
+        die();
+    }
+
     /**
      * @return string
      */
@@ -59,7 +65,7 @@ class Webhook
         $response = $this->responseNormalize($this->request->getBodyParams());
         return array_key_exists('status', $response) && $response['status'] === 'success'
             ? $this->getSuccessResponse($response)
-            : die('OK');
+            : $this->returnOk();
     }
 
     /**
@@ -143,9 +149,9 @@ class Webhook
                 $payment->setParentTransactionId(null);
                 $payment->save();
                 $order->save();
-                die('OK');
+                $this->returnOk();
             }
-            die('OK');
+            $this->returnOk();
         }
         return 'HATA: Sipariş durumu tamamlanmadı. Tekrar deneniyor.';
     }
