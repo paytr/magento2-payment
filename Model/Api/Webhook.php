@@ -10,6 +10,7 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Builder as TransactionBuilder;
 use Magento\Sales\Model\OrderFactory;
 use Paytr\Payment\Helper\PaytrHelper;
+use Magento\Framework\App\ResponseInterface;
 
 /**
  * Class Webhook
@@ -24,6 +25,8 @@ class Webhook
     protected $transactionRepository;
     protected $request;
     protected $paytrHelper;
+    protected $response;
+
 
     /**
      * Webhook constructor.
@@ -41,7 +44,8 @@ class Webhook
         TransactionBuilder $tb,
         TransactionRepositoryInterface $transactionRepository,
         Request $request,
-        PaytrHelper $paytrHelper
+        PaytrHelper $paytrHelper,
+        ResponseInterface $response
     ) {
         $this->orderFactory             = $orderFactory;
         $this->config                   = $context->getScopeConfig();
@@ -49,12 +53,15 @@ class Webhook
         $this->transactionRepository    = $transactionRepository;
         $this->request                  = $request;
         $this->paytrHelper              = $paytrHelper;
+        $this->response                 = $response;
     }
 
     public function returnOk()
     {
-        echo chr(79) . chr(75);
-        die();
+        $this->response->setHeader('Content-Type', 'text/plain', true);
+        $this->response->setBody('OK');
+        $this->response->sendResponse();
+        exit;
     }
 
     /**
