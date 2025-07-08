@@ -437,7 +437,7 @@ class PaytrHelper
             'merchant_ok_url'   =>  $this->getMerchantOkUrl(),
             'merchant_fail_url' =>  $this->getMerchantFailUrl(),
             'timeout_limit'     =>  $this->getTimeoutLimit(),
-            'currency'          =>  "TL",
+            'currency'          =>  $this->getCurrency(),
             'test_mode'         =>  $this->getTestMode(),
             'lang'              =>  $this->getLang(),
             'iframe_v2'         =>  !$this->getIFrameV1(),
