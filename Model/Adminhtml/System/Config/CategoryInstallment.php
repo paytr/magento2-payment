@@ -51,10 +51,10 @@ class CategoryInstallment extends Value
         ScopeConfigInterface $config,
         TypeListInterface $cacheTypeList,
         Random $mathRandom,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = [],
-        Json $serializer = null
+        ?Json $serializer = null
     ) {
         $this->mathRandom = $mathRandom;
         $this->serializer = $serializer ?: ObjectManager::getInstance()
