@@ -53,8 +53,7 @@ class Webhook
 
     public function returnOk()
     {
-        echo chr(79) . chr(75);
-        die();
+        return 'AS-OK';
     }
 
     /**
