@@ -46,11 +46,6 @@
                     <label>Test Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="iframe_v1" translate="iframe_v1" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>IFrame V1</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If 'No' is selected, it means it works on IFrame v2.</comment>
-                </field>
                 <field id="iframe_v2_dark" translate="iframe_v2_dark" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Dark Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

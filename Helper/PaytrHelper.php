@@ -400,14 +400,6 @@ class PaytrHelper
     /**
      * @return int
      */
-    public function getIFrameV1()
-    {
-        return $this->config->getValue('payment/paytr_iframe/iframe_v1', $this->getScopeInterface()) ?? 0;
-    }
-
-    /**
-     * @return int
-     */
     public function getIFrameV2DarkMode()
     {
         return $this->config->getValue('payment/paytr_iframe/iframe_v2_dark', $this->getScopeInterface()) ?? 0;
@@ -439,7 +431,6 @@ class PaytrHelper
             'currency'          =>  $this->getCurrency(),
             'test_mode'         =>  $this->getTestMode(),
             'lang'              =>  $this->getLang(),
-            'iframe_v2'         =>  !$this->getIFrameV1(),
             'iframe_v2_dark'    =>  $this->getIFrameV2DarkMode(),
         ];
     }
