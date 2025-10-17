@@ -1,37 +1,41 @@
 {
-    "name": "paytr/magento2-payment",
-    "description": "PayTR Magento2 Payment Module",
-    "type": "magento2-module",
-    "version": "1.2.8",
-    "license": "MIT",
-    "authors": [{
-        "name": "PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş.",
-        "email": "bilgi@paytr.com",
-        "homepage": "https://www.paytr.com"
-    }],
-    "autoload": {
-        "files": [
-            "registration.php"
-        ],
-        "psr-4": {
-            "Paytr\\Payment\\": ""
-        }
-    },
-    "require": {
-        "php": "^8.1"
-    },
-    "keywords": [
-        "API",
-        "Sanal Pos",
-        "Credit card",
-        "Paytr",
-        "eCommerce",
-        "Magento",
-        "Magento 2",
-        "Magento extension",
-        "Payment",
-        "Payment authorization",
-        "Payment integration",
-        "Payment gateway"
-    ]
+  "name": "paytr/magento2-payment",
+  "description": "PayTR Magento2 Payment Module",
+  "type": "magento2-module",
+  "version": "1.2.6",
+  "license": [
+    "MIT"
+  ],
+  "require": {
+    "php": "^8.1"
+  },
+  "authors": [
+    {
+      "name": "PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş.",
+      "email": "bilgi@paytr.com",
+      "homepage": "https://www.paytr.com"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Paytr\\Payment\\": ""
+    }
+  },
+  "keywords": [
+    "API",
+    "Sanal Pos",
+    "Credit card",
+    "Paytr",
+    "eCommerce",
+    "Magento",
+    "Magento 2",
+    "Magento extension",
+    "Payment",
+    "Payment authorization",
+    "Payment integration",
+    "Payment gateway"
+  ]
 }
