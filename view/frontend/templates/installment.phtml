@@ -20,7 +20,17 @@
             let s = document.createElement("script");
             s.type = "text/javascript";
             s.id = "paytr_installment_table_script";
-            s.src = "https://www.paytr.com/odeme/taksit-tablosu/v2?token=<?php echo $block->getInstallmentTableToken() ?>&merchant_id=<?php echo $block->getMerchantId() ?>&amount="+jQuery(this).val()+"&taksit=<?php echo $block->installmentSettings()['max_installment'] ?>&tumu=<?php echo $block->getInstallmentTableShowAll() ?>";
+            const token = "<?= $block->escapeJs($block->getInstallmentTableToken()) ?>";
+            const merchantId = "<?= $block->escapeJs($block->getMerchantId()) ?>";
+            const maxInstallment = "<?= $block->escapeJs($block->installmentSettings()['max_installment']) ?>";
+            const showAll = "<?= $block->escapeJs($block->getInstallmentTableShowAll()) ?>";
+
+            s.src = "https://www.paytr.com/odeme/taksit-tablosu/v2"
+                + "?token=" + token
+                + "&merchant_id=" + merchantId
+                + "&amount=" + jQuery(this).val()
+                + "&taksit=" + maxInstallment
+                + "&tumu=" + showAll;
             jQuery("body").append(s);
         });
     });

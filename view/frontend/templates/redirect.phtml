@@ -1,9 +1,22 @@
-<iframe src="https://www.paytr.com/odeme/guvenli/<?php echo json_decode($this->getAction())->token;?>" id="paytriframe" frameborder="0" scrolling="no" style="width: 100%;"></iframe>
+<?php
+// Action JSON'unu güvenli şekilde çöz
+$action = json_decode($block->getAction());
+$token = isset($action->token) ? $action->token : '';
+?>
+
+<iframe
+        src="https://www.paytr.com/odeme/guvenli/<?= $block->escapeUrl($token) ?>"
+        id="paytriframe"
+        frameborder="0"
+        scrolling="no"
+        style="width: 100%;">
+</iframe>
+
 <script type="text/javascript">
     require([
         "Paytr_Payment/js/iframeResizer.min",
         "domReady"
     ], function (iFrameResize) {
-        iFrameResize({},'#paytriframe');
+        iFrameResize({}, '#paytriframe');
     });
 </script>
