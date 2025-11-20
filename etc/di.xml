@@ -40,7 +40,11 @@
                 </item>
                 <item name="default" xsi:type="array">
                     <item name="type" xsi:type="string">*/*</item>
-                    <item name="model" xsi:type="string">Magento\Framework\Webapi\Rest\Response\Renderer\Json</item>
+                    <item name="model" xsi:type="string">Paytr\Payment\Webapi\Rest\Response\Renderer\All</item>
+                </item>
+                <item name="html" xsi:type="array">
+                    <item name="type" xsi:type="string">text/plain</item>
+                    <item name="model" xsi:type="string">Paytr\Payment\Webapi\Rest\Response\Renderer\All</item>
                 </item>
             </argument>
         </arguments>
