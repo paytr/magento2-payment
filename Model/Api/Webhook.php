@@ -64,12 +64,13 @@ class Webhook
     /**
      * @return string
      */
-    public function getResponse()
+    public function getResponse(): string
     {
         $response = $this->responseNormalize($this->request->getBodyParams());
-        return array_key_exists('status', $response) && $response['status'] === 'success'
+        $result = array_key_exists('status', $response) && $response['status'] === 'success'
             ? $this->getSuccessResponse($response)
             : $this->getFailedResponse($response);
+        return 'RESTPTR-' . $result;
     }
 
     /**
