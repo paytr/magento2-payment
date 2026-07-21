@@ -53,7 +53,7 @@ class PaytrRequestHelper
         if (curl_errno($ch)) {
             return "PAYTR IFRAME connection error. err:".curl_error($ch);
         }
-        curl_close($ch);
+
         $result = json_decode($result, 1);
         if ($result['status']=='success') {
             $token = $result['token'];
