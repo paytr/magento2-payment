@@ -1,9 +1,5 @@
-<?php
-// Action JSON'unu güvenli şekilde çöz
-$action = json_decode($block->getAction());
-$token = isset($action->token) ? $action->token : '';
-?>
-
+<?php $token = $block->getToken(); ?>
+<?php if ($token !== ''): ?>
 <iframe
         src="https://www.paytr.com/odeme/guvenli/<?= $block->escapeUrl($token) ?>"
         id="paytriframe"
@@ -20,3 +16,4 @@ $token = isset($action->token) ? $action->token : '';
         iFrameResize({}, '#paytriframe');
     });
 </script>
+<?php endif; ?>
