@@ -74,8 +74,18 @@ class Redirect extends \Magento\Framework\View\Element\Template
             ];
             $this->setAction(json_encode($paytr_data));
         } catch (\Exception $e) {
+            $this->_logger->critical($e);
             $this->_messageManager->addErrorMessage('An error occurred. Please try again.');
         }
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        $action = json_decode((string)$this->getAction());
+        return isset($action->token) ? (string)$action->token : '';
     }
 }
