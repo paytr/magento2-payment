@@ -31,6 +31,11 @@ class Index extends \Magento\Framework\App\Action\Action
     private $successValidator;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      *
      * @param Context                  $context
      * @param OrderRepositoryInterface $orderRepository
@@ -46,6 +51,7 @@ class Index extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
         $this->checkoutSession = $checkoutSession;
         $this->successValidator = $successValidator;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -59,7 +65,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $order->getState() == Order::STATE_NEW ||
             $order->getState() == null) {
                 $order->setState(Order::STATE_PENDING_PAYMENT);
-                $order->save();
+                $this->orderRepository->save($order);
         }
         $this->checkoutSession->setLastOrderId($order->getId())
             ->setLastSuccessQuoteId($order->getQuoteId())
