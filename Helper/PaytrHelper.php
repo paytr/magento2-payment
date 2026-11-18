@@ -9,6 +9,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -36,6 +37,11 @@ class PaytrHelper
     protected $orderFactory;
 
     /**
+     * @var OrderResource
+     */
+    protected $orderResource;
+
+    /**
      * @var StoreManagerInterface
      */
     protected $_storeManager;
@@ -44,12 +50,14 @@ class PaytrHelper
         Context $context,
         Session $checkoutSession,
         OrderFactory $orderFactory,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        OrderResource $orderResource
     ) {
         $this->config               = $context->getScopeConfig();
         $this->checkoutSession      = $checkoutSession;
         $this->orderFactory         = $orderFactory;
         $this->_storeManager        = $storeManager;
+        $this->orderResource        = $orderResource;
     }
 
     /**
@@ -170,11 +178,13 @@ class PaytrHelper
     }
 
     /**
-     * @return Order|OrderFactory
+     * @return Order
      */
     public function getOrder()
     {
-        return $this->orderFactory->create()->load($this->getRealOrderId());
+        $order = $this->orderFactory->create();
+        $this->orderResource->load($order, $this->getRealOrderId());
+        return $order;
     }
 
     /**

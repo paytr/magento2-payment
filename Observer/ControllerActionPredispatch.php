@@ -7,6 +7,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -24,6 +25,10 @@ class ControllerActionPredispatch implements ObserverInterface
      * @var OrderFactory
      */
     protected $orderFactory;
+    /**
+     * @var OrderResource
+     */
+    protected $orderResource;
     /**
      * @var Http
      */
@@ -53,13 +58,15 @@ class ControllerActionPredispatch implements ObserverInterface
         OrderFactory $orderFactory,
         Http $redirect,
         OrderSender $orderSender,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        OrderResource $orderResource
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->orderFactory = $orderFactory;
         $this->_redirect = $redirect;
         $this->orderSender = $orderSender;
         $this->logger = $logger;
+        $this->orderResource = $orderResource;
     }
     /**
      * @param Observer $observer
@@ -70,7 +77,8 @@ class ControllerActionPredispatch implements ObserverInterface
         if ($request->getModuleName() == "checkout" and $request->getActionName()== "success") {
             $orderId = $this->checkoutSession->getLastOrderId();
             if ($orderId) {
-                $order = $this->orderFactory->create()->load($orderId);
+                $order = $this->orderFactory->create();
+                $this->orderResource->load($order, $orderId);
                 if (($order->getPayment()->getMethodInstance()->getCode()== "paytr" ||
                         $order->getPayment()->getMethodInstance()->getCode() == "paytr_iframe" ||
                         $order->getPayment()->getMethodInstance()->getCode() == "paytr_iframe_transfer"
